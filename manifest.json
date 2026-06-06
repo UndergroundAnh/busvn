@@ -2,7 +2,7 @@
   "name": "Mã QR của tôi",
   "short_name": "Mã QR",
   "start_url": ".",
-  "display": "fullscreen",
+  "display": "standalone",
   "background_color": "#1f2937",
   "theme_color": "#006e33"
 }
