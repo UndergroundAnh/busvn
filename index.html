@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mã QR của tôi</title>
+    <link rel="stylesheet" href="output.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes bounce-blink {
+            0%, 45% { opacity: 1; transform: scale(1); }
+            45.1%, 55% { opacity: 0; transform: scale(0); }
+            55.1% { opacity: 1; transform: scale(0.3); }
+            65% { opacity: 1; transform: scale(1.2); }
+            75% { opacity: 1; transform: scale(0.9); }
+            85% { opacity: 1; transform: scale(1.05); }
+            95%, 100% { opacity: 1; transform: scale(1); }
+        }
+        /* Cập nhật thành 1s */
+        .bounce-blink-1s { animation: bounce-blink 1s infinite; transform-origin: center; }
+
+        /* Bo 2 góc chéo luân phiên cho ô logo QR */
+        .round-diagonal-a { border-radius: 30% 0 30% 0; transition: border-radius 0.4s ease; }
+        .round-diagonal-b { border-radius: 0 30% 0 30%; transition: border-radius 0.4s ease; }
+
+        .custom-dash {
+            height: 1px;
+            background-image: linear-gradient(to right, #ff5a00 65%, transparent 35%);
+            background-size: 18px 1px;
+            background-repeat: repeat-x;
+        }
+
+        .nav-container-shadow { filter: drop-shadow(0 -8px 12px rgba(0, 166, 81, 0.25)); }
+
+        .nav-background {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 68px; background: white;
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='68' viewBox='0 0 120 68'%3E%3Cpath d='M0,0 H12 C18,0 21,4 25,9 A36,36 0 0,0 95,9 C99,4 102,0 108,0 H120 V68 H0 Z' fill='black'/%3E%3C/svg%3E"), linear-gradient(to right, black calc(50% - 59px), transparent calc(50% - 59px), transparent calc(50% + 59px), black calc(50% + 59px));
+            -webkit-mask-position: center top, left top; -webkit-mask-repeat: no-repeat, no-repeat; -webkit-mask-size: 120px 68px, 100% 100%;
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='68' viewBox='0 0 120 68'%3E%3Cpath d='M0,0 H12 C18,0 21,4 25,9 A36,36 0 0,0 95,9 C99,4 102,0 108,0 H120 V68 H0 Z' fill='black'/%3E%3C/svg%3E"), linear-gradient(to right, black calc(50% - 59px), transparent calc(50% - 59px), transparent calc(50% + 59px), black calc(50% + 59px));
+            mask-position: center top, left top; mask-repeat: no-repeat, no-repeat; mask-size: 120px 68px, 100% 100%; z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-gray-800 flex justify-center items-center min-h-screen">
+
+    <div class="w-full max-w-[400px] h-[100dvh] sm:h-[850px] bg-[#f5f6f8] relative flex flex-col overflow-hidden shadow-2xl sm:rounded-[36px] sm:border-[10px] sm:border-gray-900 bg-cover bg-center">
+        
+        <header class="bg-[#006e33] text-white px-4 py-3 flex justify-between items-center shrink-0 z-20">
+            <div class="w-6"></div>
+            <h1 class="text-[15px] font-normal tracking-wide">Mã QR của tôi</h1>
+            <button class="focus:outline-none text-white hover:opacity-80 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-[26px] h-[26px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="7.5" y="7.5" width="9" height="9" rx="1.5" />
+                    <line x1="6" y1="12" x2="18" y2="12" />
+                    <path d="M7.5 3 H5.5 C4.12 3 3 4.12 3 5.5 V7.5" />
+                    <path d="M16.5 3 H18.5 C19.88 3 21 4.12 21 5.5 V7.5" />
+                    <path d="M21 16.5 V18.5 C21 19.88 19.88 21 18.5 21 H16.5" />
+                    <path d="M7.5 21 H5.5 C4.12 21 3 19.88 3 18.5 V16.5" />
+                </svg>
+            </button>
+        </header>
+
+        <main class="flex-1 flex flex-col overflow-y-auto no-scrollbar pb-[68px] relative z-10">
+            
+            <div class="mx-4 mt-2 bg-white rounded-xl shadow-sm px-4 py-1.5 flex items-center justify-start relative z-0 shrink-0">
+                <i class="ph-fill ph-credit-card text-gray-400 text-xl mr-2"></i>
+                <span class="text-[12px] font-bold text-gray-800">(1/1)</span>
+                <span class="text-[12px] font-bold text-[#ff5a00] ml-2">0024006349/HPTC</span>
+                <i class="ph-bold ph-caret-down text-gray-500 ml-auto text-sm"></i>
+            </div>
+
+            <!-- Vé trắng dùng flex-1 để lấp đầy không gian trống, đẩy thẻ cam xuống đáy -->
+            <!-- Vé trắng bo góc trên, kéo dài xuống che khoảng trắng -->
+            <div class="mx-4 mt-1.5 bg-white rounded-t-2xl relative z-0 flex flex-col pb-4">
+                <!-- Vùng trên đường nét đứt -->
+                <div id="instruction-top" class="text-center py-2 text-[16px] text-[#00a651] font-medium tracking-widest relative shrink-0">
+                    THÁNG 6
+                </div>
+
+                <div class="relative w-full h-[1px] shrink-0">
+                    <div class="absolute inset-x-0 bottom-0 mx-4 custom-dash"></div>
+                    <div class="absolute -left-2 -top-[10px] w-5 h-5 bg-[#f5f6f8] rounded-full z-10"></div>
+                    <div class="absolute -right-2 -top-[10px] w-5 h-5 bg-[#f5f6f8] rounded-full z-10"></div>
+                </div>
+
+                <!-- Vùng dưới đường nét đứt -->
+                <div id="instruction-bottom" class="text-center py-1.5 text-[12px] text-gray-600 font-normal leading-snug shrink-0">
+                    Vui lòng đưa mã QR vào máy quét<br>hoặc xuất trình cho nhân viên soát vé
+                </div>
+
+                <!-- shrink-0 để mã QR không bị thu nhỏ, giữ nguyên độ to chuẩn -->
+                <div class="px-6 pt-3 w-full flex flex-col justify-center items-center">
+                    <div class="relative w-full max-w-[320px] aspect-square flex justify-center items-center mx-auto shrink-0">
+                        <div id="qr-container" class="absolute inset-0 flex justify-center items-center"></div>
+                        <div id="qr-logo-box" class="absolute z-10 bg-white flex items-center justify-center round-diagonal-a overflow-hidden" style="width:18.5%; height:18.5%;">
+                            <img id="qr-logo" src="vnpass.png" alt="VNPass" class="h-[24px] w-auto object-contain bounce-blink-1s">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timer nằm trong vé trắng, phía dưới QR -->
+                <div class="text-center py-2 shrink-0">
+                    <span id="timer" class="text-[#ff0000] text-[22px] font-medium">0:30</span>
+                </div>
+            </div>
+
+            <!-- Thẻ cam kéo lên đè vé trắng -->
+            <div class="mx-4 mb-0 -mt-4 shrink-0 bg-gradient-to-r from-[#ff5200] via-[#ff6b15] to-[#ff9e5e] rounded-2xl p-3.5 relative overflow-hidden z-10">
+                
+                <!-- Logo nền chìm (Watermark) được căn chỉnh lại vị trí và kích thước -->
+                <img src="vnpasswhite.png" class="absolute top-[10px] -right-[80px] w-[260px] max-w-none opacity-25 pointer-events-none z-0" alt="">
+
+                <div class="flex justify-between items-start relative z-10">
+                    <h2 class="text-white text-[13px] uppercase tracking-wider font-semibold">Thẻ tháng liên tuyến</h2>
+                    <div class="flex items-center gap-5">
+                        <!-- Đã cập nhật class thành bounce-blink-1s -->
+                        <img src="hptc.png" alt="HPTC Logo" class="h-[26px] w-auto rounded-sm bounce-blink-1s">
+                        <img src="vnpass.png" alt="VNPass Logo" class="h-[24px] w-auto bounce-blink-1s">
+                    </div>
+                </div>
+
+                <div class="mt-4 relative z-10">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex flex-col items-start gap-0">
+                            <div class="w-16 h-20 bg-white rounded-md flex flex-col items-center pt-2.5 overflow-hidden shadow-inner shrink-0 relative cursor-pointer" onclick="document.getElementById('avatar-upload').click()" title="Nhấn để đổi ảnh đại diện">
+                                <img id="avatar-img" src="" class="hidden w-full h-full object-cover absolute inset-0 z-20">
+                                <div class="w-[26px] h-[26px] bg-[#ff6b15] rounded-full z-10"></div>
+                                <div class="w-[48px] h-[36px] bg-[#ff6b15] rounded-t-[20px] mt-1.5 z-10"></div>
+                            </div>
+                            <input type="file" id="avatar-upload" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)">
+                            <div class="flex flex-col mt-1.5">
+                                <div id="user-name" class="whitespace-nowrap text-white font-bold text-[15px] leading-tight mb-0.5 cursor-pointer hover:underline decoration-white/50 underline-offset-2" onclick="editName()" title="Nhấn để sửa tên">Trần Văn Hiếu</div>
+                                <div class="text-white/90 text-[11px] leading-tight mb-0.5 mt-2">29/06/2004</div>
+                                <div class="text-white/90 text-[11px] leading-tight">Quận bắc Từ Liêm</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-end self-stretch justify-between mt-0">
+                            <div>
+                            <div class="flex gap-2 mb-1.5">
+                                <div class="border-2 border-[#ff5a00] bg-black/5 rounded-md w-[70px] h-[52px] flex flex-col items-center justify-center">
+                                    <svg viewBox="0 0 24 24" class="w-[16px] h-[16px]">
+                                        <defs>
+                                            <mask id="diag-tl-mask-1">
+                                                <polygon points="-5,-5 28.5,-5 -5,28.5" fill="white" />
+                                            </mask>
+                                            <mask id="diag-br-mask-1">
+                                                <polygon points="29,29 29,-4.5 -4.5,29" fill="white" />
+                                            </mask>
+                                        </defs>
+                                        <path mask="url(#diag-tl-mask-1)" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round" opacity="0.15" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                        <path mask="url(#diag-br-mask-1)" fill="#ffffff" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round" opacity="0.4" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                    </svg>
+                                    <span class="text-white/40 text-[11px] font-bold mt-1">1+4+7+10</span>
+                                </div>
+
+                                <div class="border-2 border-[#ff5a00] bg-white rounded-md w-[70px] h-[52px] flex flex-col items-center justify-center shadow-sm">
+                                    <svg viewBox="0 0 24 24" class="w-[16px] h-[16px]">
+                                        <defs>
+                                            <mask id="diag-tl-mask-2">
+                                                <polygon points="-5,-5 28.5,-5 -5,28.5" fill="white" />
+                                            </mask>
+                                            <mask id="diag-br-mask-2">
+                                                <polygon points="29,29 29,-4.5 -4.5,29" fill="white" />
+                                            </mask>
+                                        </defs>
+                                        <path mask="url(#diag-tl-mask-2)" fill="#ffba8a" stroke="#ffba8a" stroke-width="3.5" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                        <path mask="url(#diag-br-mask-2)" fill="#ff5a00" stroke="#ff5a00" stroke-width="3.5" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                    </svg>
+                                    <span class="text-[#ff5a00] text-[11px] font-bold mt-1">2+5+8+11</span>
+                                </div>
+
+                                <div class="border-2 border-[#ff5a00] bg-white rounded-md w-[70px] h-[52px] flex flex-col items-center justify-center shadow-sm">
+                                    <svg viewBox="0 0 24 24" class="w-[16px] h-[16px]">
+                                        <defs>
+                                            <mask id="diag-tl-mask-3">
+                                                <polygon points="-5,-5 28.5,-5 -5,28.5" fill="white" />
+                                            </mask>
+                                            <mask id="diag-br-mask-3">
+                                                <polygon points="29,29 29,-4.5 -4.5,29" fill="white" />
+                                            </mask>
+                                        </defs>
+                                        <path mask="url(#diag-tl-mask-3)" fill="#ffba8a" stroke="#ffba8a" stroke-width="3.5" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                        <path mask="url(#diag-br-mask-3)" fill="#ff5a00" stroke="#ff5a00" stroke-width="3.5" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                    </svg>
+                                    <span class="text-[#ff5a00] text-[11px] font-bold mt-1">06/26</span>
+                                </div>
+                            </div>
+                            <div class="text-red-800 font-bold text-[12px] tracking-wide text-right">0024006349/HPTC</div>
+                            </div>
+                            <div class="text-white/70 text-[10px] font-medium text-right leading-tight">Niên hạn<br><span class="text-white font-bold text-[14px]">01/2027</span></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </main>
+
+        <div class="absolute bottom-[39px] left-1/2 -translate-x-1/2 z-30">
+            <button class="w-[58px] h-[58px] bg-[#00a651] text-white rounded-full flex justify-center items-center shadow-[0_4px_10px_rgba(0,166,81,0.4)] active:scale-95 transition-transform">
+                <i class="ph ph-plus text-3xl"></i>
+            </button>
+        </div>
+
+        <div class="absolute bottom-0 w-full h-[68px] z-20 nav-container-shadow">
+            <div class="nav-background"></div>
+            <nav class="relative z-20 flex justify-between px-1 h-full">
+                <button class="relative flex flex-col items-center justify-center w-1/4 h-full text-[#9ca3af] hover:text-[#60b279] transition-colors">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[26px] h-[26px] mb-1">
+                        <path d="M4 9L12 3l8 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
+                        <line x1="12" y1="14" x2="12" y2="17" />
+                    </svg>
+                    <span class="text-[11px] font-normal leading-none">Trang chủ</span>
+                </button>
+                <button class="relative flex flex-col items-center justify-center w-1/4 h-full text-[#60b279]">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[3px] bg-[#60b279] rounded-b-md"></div>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[26px] h-[26px] mb-1">
+                        <path d="M9 3H6a3 3 0 0 0-3 3v3" stroke="currentColor" stroke-width="1.8" stroke-opacity="0.4" />
+                        <path d="M15 3h3a3 3 0 0 1 3 3v3" stroke="currentColor" stroke-width="1.8" />
+                        <path d="M9 21H6a3 3 0 0 1-3-3v-3" stroke="currentColor" stroke-width="1.8" />
+                        <path d="M15 21h3a3 3 0 0 0 3-3v-3" stroke="currentColor" stroke-width="1.8" stroke-opacity="0.4" />
+                        <rect x="6.5" y="6.5" width="4.5" height="4.5" rx="1.5" fill="currentColor" stroke="currentColor" />
+                        <rect x="13" y="6.5" width="4.5" height="4.5" rx="1.5" stroke="currentColor" stroke-opacity="0.4" />
+                        <rect x="6.5" y="13" width="4.5" height="4.5" rx="1.5" stroke="currentColor" stroke-opacity="0.4" />
+                        <rect x="13" y="13" width="4.5" height="4.5" rx="1.5" fill="currentColor" stroke="currentColor" />
+                    </svg>
+                    <span class="text-[11px] font-normal leading-none">Mã QR</span>
+                </button>
+                <div class="w-[15%]"></div>
+                <button class="relative flex flex-col items-center justify-center w-1/4 h-full text-[#9ca3af] hover:text-[#60b279] transition-colors">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[26px] h-[26px] mb-1">
+                        <path d="M20.2 13.5A8.2 8.2 0 1 0 13.5 21.3" />
+                        <path d="M17 18v3.5M20.5 18v3.5" />
+                        <path d="M12 13.5V8" />
+                        <path d="M9 2h6" />
+                    </svg>
+                    <span class="text-[11px] font-normal leading-none">Lịch sử quét</span>
+                </button>
+                <button class="relative flex flex-col items-center justify-center w-1/4 h-full text-[#9ca3af] hover:text-[#60b279] transition-colors">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[26px] h-[26px] mb-1">
+                        <ellipse cx="12" cy="7" rx="4" ry="4" />
+                        <ellipse cx="12" cy="18" rx="7.5" ry="4.5" />
+                    </svg>
+                    <span class="text-[11px] font-normal leading-none">Cá nhân</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        function editName() {
+            const nameEl = document.getElementById('user-name');
+            const currentName = nameEl.innerText;
+            const newName = prompt('Nhập tên của bạn:', currentName);
+            if (newName && newName.trim() !== '') {
+                nameEl.innerText = newName.trim();
+            }
+        }
+
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgDataUrl = e.target.result;
+                    
+                    const avatarImg = document.getElementById('avatar-img');
+                    avatarImg.src = imgDataUrl;
+                    avatarImg.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let timerInterval;
+            let resetCount = 0;
+            function generateQR() {
+                const typeNumber = 12;
+                const qr = qrcode(typeNumber, 'L');
+                qr.addData('0024006349/HPTC-' + Math.floor(Math.random() * 10000)); 
+                qr.make(); 
+                const qrContainer = document.getElementById('qr-container');
+                qrContainer.innerHTML = qr.createImgTag(5, 0); 
+                const qrImg = qrContainer.querySelector('img');
+                // Mã QR to và không bị giới hạn chiều cao
+                qrImg.className = 'w-full h-full object-contain';
+                qrImg.style.imageRendering = 'pixelated';
+            }
+            function startTimer() {
+                const timerElement = document.getElementById('timer');
+                let timeLeft = 30;
+                
+                // Cập nhật nội dung đồng hồ
+                timerElement.textContent = '0:30';
+                
+                // Toggle bo góc chéo mỗi lần reset
+                const logoBox = document.getElementById('qr-logo-box');
+                logoBox.classList.toggle('round-diagonal-a', resetCount % 2 === 0);
+                logoBox.classList.toggle('round-diagonal-b', resetCount % 2 !== 0);
+                resetCount++;
+                
+                document.getElementById('instruction-top').innerHTML = 'THÁNG 6';
+                document.getElementById('instruction-top').className = 'text-center py-2 text-[16px] text-[#00a651] font-medium tracking-widest relative shrink-0';
+                document.getElementById('instruction-bottom').innerHTML = 'Vui lòng đưa mã QR vào máy quét<br>hoặc xuất trình cho nhân viên soát vé';
+                document.getElementById('instruction-bottom').classList.remove('hidden');
+                
+                generateQR();
+                
+                if(timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft > 0) {
+                        timerElement.textContent = timeLeft < 10 ? `0:0${timeLeft}` : `0:${timeLeft}`;
+                    } else {
+                        startTimer();
+                    }
+                }, 1000);
+            }
+            startTimer();
+        });
+    </script>
+</body>
+</html>
