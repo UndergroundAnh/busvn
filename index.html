@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#006e33">
     <title>Mã QR của tôi</title>
     <link rel="stylesheet" href="output.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -52,7 +56,7 @@
         <header class="bg-[#006e33] text-white px-4 py-3 flex justify-between items-center shrink-0 z-20">
             <div class="w-6"></div>
             <h1 class="text-[15px] font-normal tracking-wide">Mã QR của tôi</h1>
-            <button class="focus:outline-none text-white hover:opacity-80 transition-opacity">
+            <button onclick="toggleFullScreen()" class="focus:outline-none text-white hover:opacity-80 transition-opacity" title="Chuyển chế độ toàn màn hình">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-[26px] h-[26px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="7.5" y="7.5" width="9" height="9" rx="1.5" />
                     <line x1="6" y1="12" x2="18" y2="12" />
@@ -253,6 +257,21 @@
     </div>
 
     <script>
+        function toggleFullScreen() {
+            const doc = window.document;
+            const docEl = doc.documentElement;
+
+            const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+            if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                requestFullScreen.call(docEl);
+            }
+            else {
+                cancelFullScreen.call(doc);
+            }
+        }
+
         function editName() {
             const nameEl = document.getElementById('user-name');
             const currentName = nameEl.innerText;
