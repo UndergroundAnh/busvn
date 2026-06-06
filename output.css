@@ -449,6 +449,9 @@
   .overflow-y-auto {
     overflow-y: auto;
   }
+  .overscroll-none {
+    overscroll-behavior: none;
+  }
   .rounded-2xl {
     border-radius: var(--radius-2xl);
   }
